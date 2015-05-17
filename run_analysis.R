@@ -24,6 +24,7 @@ GetData <- function() {
 
 DownloadAndExtractData <- function() {
   # Downloads and extracts the data file required for the project.
+  #
   # If the compressed file already exits, it is not downloaded again.
   file.name <- "getdata_projectfiles_UCI HAR Dataset.zip"
   if (!file.exists(file.name)) {
@@ -38,4 +39,40 @@ DownloadAndExtractData <- function() {
   unzip(file.name)
 }
 
-GetData()
+MergeTrainAndTestSets <- function() {
+  # Merges the tran and test data sets from the Samsung data directory.
+  #
+  # If the data is not present in the working directory, this function
+  # downloads and extracts the original data set.
+  #
+  # Returns:
+  #  A data table with the merged data set.
+  GetData()
+  # Read all the original data sets.
+  dataset.dir <- "UCI HAR Dataset"
+  activity.labels <- ReadDataTable(dataset.dir, "activity_labels.txt")
+  features <- ReadDataTable(dataset.dir, "features.txt")
+  test.dataset.dir <- paste(dataset.dir, "test", sep="/")
+  test.subjects <- ReadDataTable(test.dataset.dir, "subject_test.txt")
+  x.test <- ReadDataTable(test.dataset.dir, "X_test.txt")
+  y.test <- ReadDataTable(test.dataset.dir, "y_test.txt")
+  train.dataset.dir <- paste(dataset.dir, "train", sep="/")
+  train.subjects <- ReadDataTable(train.dataset.dir, "subject_train.txt")
+  x.train <- ReadDataTable(train.dataset.dir, "X_train.txt")
+  y.train <- ReadDataTable(train.dataset.dir, "y_train.txt")
+}
+
+ReadDataTable <- function(directory, file.name) {
+  # Reads a data table from a file.
+  #
+  # Args:
+  #   directory: The directory where the file is located.
+  #   file.name: The name of the file that contains the data.
+  #
+  # Returns:
+  #   A table with the data read from the file.
+  table <- read.table(paste(directory, file.name, sep="/"))
+  return(table)
+}
+
+data.set <- MergeTrainAndTestSets()
