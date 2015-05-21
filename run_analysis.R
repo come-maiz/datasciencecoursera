@@ -35,6 +35,10 @@ MergeTrainAndTestSets <- function() {
   train.measurements <- ReadDataTable(train.dataset.dir, "X_train.txt")
   train.activities <- ReadDataTable(train.dataset.dir, "y_train.txt")
 
+  # Set the column names for the measurements.
+  names(test.measurements) <- features[[2]]
+  names(train.measurements) <- features[[2]]
+
   # Merge the test data set.
   test.dataset <- cbind(test.subjects, test.activities, test.measurements)
   # Merge the train data set.
@@ -42,6 +46,10 @@ MergeTrainAndTestSets <- function() {
 
   # Join the test and train data sets.
   dataset <- rbind(train.dataset, test.dataset)
+
+  # Set the column names for the two new columns.
+  names(dataset)[1] <- "Participant"
+  names(dataset)[2] <- "Activity"
 }
 
 GetData <- function() {
